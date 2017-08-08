@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title>FluidJS - List Component</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="../../src/fluid.js"></script>
+        <script type="text/javascript">
+
+            /*
+             * @Test
+             * Test list with different children
+             */
+            (function() {
+
+                const Test = Fluid.create({
+
+                    render() {
+
+                        let child = '';
+
+                        for (var i = 1; i <= this.props.child; i++) {
+                            child += (`
+                                <li key=${i}>Child ${i}</li>
+                            `);
+                        }
+
+                        return `<ul>
+                            ${child}
+                            String <b>test</b>.
+                        </ul>`;
+                    }
+                });
+
+                const Demo = Fluid.create({
+
+                    extend: {
+                        "Test": Test
+                    },
+
+                    init() {
+
+                        console.log('Initial Demo List');
+
+                        this.state = {
+                            "child": 5
+                        };
+
+                        this.onAdd = this.onAdd.bind(this);
+                        this.onRemove = this.onRemove.bind(this);
+                    },
+
+                    onAdd(e) {
+
+                        this.setState({"child": ++this.state.child});
+                    },
+
+                    onRemove(e) {
+
+                        this.setState({"child": --this.state.child});
+                    },
+
+                    render() {
+
+                        return `<div class=myDemoClass style=display:table>
+                            <h1>Total children of <i>${this.state.child}</i></h1>
+                            <button onclick=this.onAdd>Add Child</button>
+                            <button onclick=this.onRemove>Remove Child</button>
+                            <Test child=${this.state.child}>
+                                Super number <u>${this.state.child}</u>.
+                                <a href="">Number ${this.state.child}</a>
+                            </Test>
+                        </div>`;
+                    }
+                });
+
+                Fluid.render(Demo, document.body);
+
+            })();
+
+        </script>
+    </body>
+</html>

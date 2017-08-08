@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title>FluidJS - Form Component</title>
+    </head>
+    <body>
+        <script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
+        <script type="text/javascript" src="../../src/fluid.js"></script>
+        <script type="text/babel">
+
+                /*
+                 * @Test
+                 * Test form with different input
+                 */
+                (function() {
+
+                    const Test = Fluid.create({
+
+                        init() {
+
+                            this.onChange = this.onChange.bind(this);
+                        },
+
+                        onChange(e) {
+
+                            e.stopPropagation();
+
+                            console.log('Input Change: ', e.target);
+                        },
+
+                        render() {
+
+                            return `<div class=myTestClass>
+                                <input type=${this.props.inputType} onchange=this.onChange />
+                            </div>`;
+                        }
+                    });
+
+                    const Demo = Fluid.create({
+
+                        extend: {
+                            "Test": Test
+                        },
+
+                        init() {
+
+                            console.log('Initial Form');
+
+                            this.state = {
+                                "color": "blue",
+                                "text": "Enter full name."
+                            };
+
+                            this.onSubmit = this.onSubmit.bind(this);
+                        },
+
+                        onSubmit(e) {
+
+                            e.preventDefault();
+
+                            console.log('Submitted Form: ', e.target);
+
+                            this.setState({
+                                "color": "green",
+                                "text": "Form submitted!"
+                            });
+                        },
+
+                        render() {
+
+                            const text = this.state.text;
+
+                            return `<form class=myDemoClass onsubmit=this.onSubmit style=display:table;color:${this.state.color}>
+                                <h1>${text}</h1>
+                                <fieldset>
+                                    <label>Firstname</label>
+                                    <Test class=myFluidClass inputType='text' />
+                                </fieldset>
+                                <fieldset>
+                                    <label>Lastname</label>
+                                    <Test class=myFluidClass inputType='text' />
+                                </fieldset>
+                                <Test class=myFluidClass inputType='submit' />
+                            </form>`;
+                        }
+                    });
+
+                    Fluid.render(Demo, document.body);
+
+                })();
+
+        </script>
+    </body>
+</html>

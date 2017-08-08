@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title>FluidJS - Video Component</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="../../fluid.min.js"></script>
+        <script type="text/javascript">
+
+            /*
+             * @Test
+             * Test video with child
+             */
+            (function() {
+
+                const Test = Fluid.create({
+
+                    init() {
+
+                        console.log('Initial Demo Video');
+
+                        this.state = {
+                            "width": "360px"
+                        };
+
+                        setTimeout(() => {
+
+                            this.setState({"width": "240px"});
+
+                        }, 2500);
+                    },
+
+                    onPlay(e) {
+
+                        console.log('Play Demo Original: ', this, e.target);
+                    },
+
+                    render() {
+
+                        const width = this.state.width;
+
+                        return `<video onplay=this.onPlay style=width:${width}>
+                            <source type=video/mp4 src= />
+                        </video>`;
+                    }
+                });
+
+                const Demo = Fluid.create({
+
+                    extend: {
+                        "Test": Test
+                    },
+
+                    onPlay(e) {
+
+                        console.log('Play Demo Override: ', this, e.target);
+                    },
+
+                    render() {
+
+                        const autoplay = true;
+                        const size = JSON.stringify({width: "360px", height: "240px"});
+
+                        return `<div class=myDemoClass style=display:table>
+                            <Test onplay=this.onPlay class=myFluidClass id=myTest2 autoplay=${autoplay} size=${size}>
+                                <source type=video/webm src=http://techslides.com/demos/sample-videos/small.webm />
+                                <source type=video/ogv src=http://techslides.com/demos/sample-videos/small.ogv />
+                                <source type=video/mp4 src=http://techslides.com/demos/sample-videos/small.mp4 />
+                                <source type=video/3gp src=http://techslides.com/demos/sample-videos/small.3gp />
+                            </Test>
+                        </div>`;
+                    }
+                });
+
+                Fluid.render(Demo, document.body);
+
+            })();
+
+        </script>
+    </body>
+</html>

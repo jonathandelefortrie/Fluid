@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>FluidJS</title>
+        <script src="../../fluid.min.js"></script>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/javascript">
+
+            (function() {
+
+                const Test3 = Fluid.create({
+
+                    render() {
+
+                        let child = '';
+
+                        for (var i = 1; i <= this.props.child; i++) {
+                            child += (`
+                                <li id=item-${i}>Child ${i}</li>
+                            `);
+                        }
+
+                        return `<ul>
+                            ${child}
+                        </ul>`;
+                    }
+                });
+
+                const Demo = Fluid.create({
+
+                    extend: {
+                        "Test3": Test3
+                    },
+
+                    init() {
+
+                        this.state = {
+                            "child": 10000
+                        };
+
+                        this.onAdd = this.onAdd.bind(this);
+                        this.onRemove = this.onRemove.bind(this);
+                    },
+
+                    onAdd(e) {
+
+                        const start = Date.now();
+
+                        this.setState({"child": ++this.state.child});
+
+                        console.log('Add: ', Date.now() - start);
+                    },
+
+                    onRemove(e) {
+
+                        const start = Date.now();
+
+                        this.setState({"child": --this.state.child});
+
+                        console.log('Remove: ', Date.now() - start);
+                    },
+
+                    render() {
+
+                        return `<Test3 child=${this.state.child}>
+                            <button onclick=this.onAdd>Add Child</button>
+                            <button onclick=this.onRemove>Remove Child</button>
+                            Total children of ${this.state.child}
+                        </Test3>`;
+                    }
+                });
+
+                const start = Date.now();
+
+                Fluid.render(
+                    Demo,
+                    document.getElementById('container')
+                );
+
+                console.log('Rendering: ', Date.now() - start);
+
+            })();
+
+        </script>
+    </body>
+</html>

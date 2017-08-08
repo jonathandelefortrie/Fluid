@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>ReactJS</title>
+        <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+        <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+        <script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/babel">
+
+            (function() {
+
+                const data = [];
+
+                for(var i = 1; i <= 10000; i++) {
+                    data.push('Child '+i);
+                }
+
+                const Test = React.createClass({
+
+                    render() {
+
+                        const child = this.props.child;
+
+                        return <ul>
+                            {child.map(function(result, index) {
+                                return <li key={index}>{result}</li>;
+                            })}
+                        </ul>;
+                    }
+                });
+
+                const Demo = React.createClass({
+
+                    getInitialState() {
+
+                        return {
+                            "child": this.props.data
+                        };
+                    },
+
+                    onAdd(e) {
+
+                        const child = this.state.child;
+                        child.push('Child ' + parseInt(this.state.child.length));
+
+                        const start = Date.now();
+
+                        this.setState({ child });
+
+                        console.log('Add: ', Date.now() - start);
+                    },
+
+                    onRemove(e) {
+
+                        const child = this.state.child;
+                        child.pop();
+
+                        const start = Date.now();
+
+                        this.setState({ child });
+
+                        console.log('Remove: ', Date.now() - start);
+                    },
+
+                    render() {
+
+                        return <div>
+                            <Test child={this.state.child}></Test>
+                            <button onClick={this.onAdd}>Add Child</button>
+                            <button onClick={this.onRemove}>Remove Child</button>
+                            Total children of {this.state.child.length}
+                        </div>;
+                    }
+                });
+
+                const start = Date.now();
+
+                ReactDOM.render(
+                    <Demo data={data} />,
+                    document.getElementById('container')
+                );
+
+                console.log('Rendering: ', Date.now() - start);
+
+            })();
+
+        </script>
+    </body>
+</html>
